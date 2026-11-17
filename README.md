@@ -226,21 +226,7 @@ Practical caveats: (a) remote web search is best effort and may be rate-limited;
 
 The original `src/app.py` produced `ModuleNotFoundError: No module named 'src'` when launched directly as a Streamlit entrypoint. The updated file now inserts the repository root into `sys.path` **before importing from `src`**. `src/config.py` also resolves relative `docs/`, `.rag_index/`, and `.env` against the repository root, regardless of the shell's current directory. The locally selected threshold is the new source default (`0.35`), while existing `.env` overrides are respected. `tests/test_config.py` adds two regression tests for the calibrated default and path handling.
 
-### Repository
 
-- GitHub: https://github.com/josehorta21/Assignment-Production-Two-Stage-RAG-Pipeline-
-- Live web deployment: none claimed; reproducible local Streamlit/Docker demo
-- YouTube recording: add the new Week 4 video link after uploading (the previous Week 3/architecture video is not this submission)
-
-## 9. Walkthrough / submission
-
-- [ ] Run `uv sync --extra dev`, `uv run pytest -v`, and `uv run streamlit run src/app.py`.
-- [ ] Capture one real **INTERNAL_RAG** response showing rank shifts, a valid internal chunk citation, and the threshold decision.
-- [ ] Capture one **WEB_FALLBACK** response (try a current-events query); ensure an actual public source URL is visible. If external search is blocked, report the service error honestly and use the UI's explicit override only to demonstrate routing control.
-- [x] Run actual local model calibration: threshold `0.35`, 19/20 routing decisions on the labeled calibration set.
-- [ ] Commit `results/calibration_results.json` from your Mac, and independently test the two UI routes with real citations.
-- [ ] Record your **5:00–7:00 minute** video with **webcam and screen visible simultaneously** throughout; describe at least two real audit flaws, show both routes and run pytest.
-- [ ] Upload the recording to YouTube (Unlisted or Public), place the link and the GitHub repository link into `CANVAS_SUBMISSION.md`, and submit through Canvas.
 
 ### References
 
