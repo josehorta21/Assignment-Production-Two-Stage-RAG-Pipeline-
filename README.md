@@ -3,9 +3,9 @@
 **Week 4 Hands-On: Production-Ready Two-Stage RAG with Query Rewriting, Cross-Encoder Re-Ranking, Confidence Gating & Live Web Fallback**  
 **Student:** José Antonio Horta Herrera · **Course:** Artificial Intelligence / AI Systems Engineering · **Term:** Fall 2026
 
-An end-to-end, **API-key-free**, two-stage Retrieval-Augmented Generation (RAG) project designed for a fictional internal cloud engineering handbook. It transforms multi-turn questions, retrieves up to **K1 = 20** candidates with normalized MiniLM vectors in **ChromaDB**, re-ranks candidates with **MS MARCO MiniLM CrossEncoder**, gates internal answers with a **sigmoid-transformed logit** (initial threshold `0.55`), and queries **DDGS** for live external evidence when the internal material is insufficient or freshness-sensitive. The Streamlit UI exposes the decisions, rank shifts, scores, sources, citations, and execution trace.
+An end-to-end, **API-key-free**, two-stage Retrieval-Augmented Generation (RAG) project designed for a fictional internal cloud engineering handbook. It transforms multi-turn questions, retrieves up to **K1 = 20** candidates with normalized MiniLM vectors in **ChromaDB**, re-ranks candidates with **MS MARCO MiniLM CrossEncoder**, gates internal answers with a **sigmoid-transformed logit** (locally calibrated threshold `0.35`), and queries **DDGS** for live external evidence when the internal material is insufficient or freshness-sensitive. The Streamlit UI exposes the decisions, rank shifts, scores, sources, citations, and execution trace.
 
-> **Verification and integrity statement (read before submitting):** The packaged project contains **12 original synthetic technical documents, 20 labeled routing evaluation questions, and 26 passing deterministic tests**. The Python tests ran in the preparation environment on November 16, 2026 (see `results/pytest_verified.txt`). **Real MiniLM, Chroma indexing, live DDGS search, FLAN-T5 synthesis and the dashboard were NOT executed here** because the prepared environment did not have the required download/runtime dependencies. A simulated test is not a substitute for a recorded live demonstration. No live calibration metrics or deployment URLs have been invented. Run the real commands below on your machine and save your output before submitting.
+> **Verification and integrity statement (Nov. 16, 2026):** This project contains **12 synthetic technical documents** and **20 labeled calibration questions**. A user-provided macOS terminal screenshot verifies a **real local MiniLM + MS MARCO CrossEncoder calibration run** that selected `0.35` from the evaluated grid. Its results are **19/20 correct routes (95%) on the same calibration set**, not independent test accuracy. The updated project has **28 passing deterministic QA tests** in the preparation environment (recorded in `results/pytest_updated.txt`). Live DDGS results, FLAN-T5 synthesis quality, and production deployment have not been independently verified; show these honestly in your recorded demonstration.
 
 ## 1. Architecture
 
@@ -33,7 +33,7 @@ flowchart LR
 | Query transformation | Local `google/flan-t5-small`, with deterministic rewrite fallback | Multi-turn pronoun expansion and exact flag preservation |
 | First-stage dense retriever | `sentence-transformers/all-MiniLM-L6-v2` + Chroma persistent HNSW cosine collection | `K1=20` candidates, unit-normalized embeddings, hash-based index rebuild |
 | Second-stage re-ranker | `cross-encoder/ms-marco-MiniLM-L-6-v2` | True pairwise attention over query/document, rank changes visible |
-| Confidence gate | Stable `sigmoid(logit)`, initial cutoff `0.55` | **Not a calibrated probability**; script measures routing error by threshold |
+| Confidence gate | Stable `sigmoid(logit)` with **local selected cutoff `0.35`** | Chosen from 20 training/evaluation labels; this sigmoid is **not a calibrated probability** |
 | External fallback | `ddgs` Python metasearch, 3 previews | No key needed; HTTP(S) URL validation, prompt-injection filtering |
 | Response generator | Local FLAN-T5 with evidence-checked output, plus always-cited extractive excerpts | Unsupported generated claims are omitted; citations must remain traceable |
 | User interface | Streamlit | 20-candidate table, rerank shifts, score meter, routing reason, citation explorers |
@@ -63,6 +63,8 @@ uv run streamlit run src/app.py
 
 On Windows PowerShell, use `Copy-Item .env.example .env` instead of `cp`. `uv sync` resolves dependencies and downloads Python packages. The first live query may download weights for MiniLM, MS MARCO, and FLAN-T5. `HF_TOKEN` is **optional**, used only if Hugging Face rate limits anonymous model downloads. No paid API key is required.
 
+**Important for existing local installations:** if you created `.env` before this update, edit its `CONFIDENCE_THRESHOLD` line to `0.35` yourself. The application honors the existing `.env` over the new source-code default. Restart Streamlit after editing `.env` to reload the settings. Keep `.env` out of Git.
+
 ### Configurable settings
 
 The optional `.env` file supports:
@@ -73,7 +75,7 @@ RERANKER_MODEL=cross-encoder/ms-marco-MiniLM-L-6-v2
 LOCAL_LLM_MODEL=google/flan-t5-small
 REWRITE_MODE=local
 GENERATION_MODE=local
-CONFIDENCE_THRESHOLD=0.55
+CONFIDENCE_THRESHOLD=0.35
 K1=20
 K2=5
 WEB_RESULTS=3
@@ -118,8 +120,9 @@ production-rag-pipeline/
 │   ├── run_smoke.py            # Optional live model / web integration example
 │   └── calibrate_threshold.py  # Real score collection and threshold comparison
 ├── audit/initial_draft.py      # Archived imperfect AI-assisted initial draft
-├── tests/                      # 26 deterministic tests across six test modules
-├── results/pytest_verified.txt # Measured deterministic QA output
+├── tests/                      # 28 deterministic tests across seven test modules (incl. config)
+├── results/pytest_verified.txt # Archived original 26-test QA output
+├── results/pytest_updated.txt  # Re-run on updated source: 28 tests
 ├── VIDEO_SCRIPT.md             # 5–7 minute demo narration
 ├── GUIA_ENTREGA_ES.md          # Delivery steps in Spanish
 └── CANVAS_SUBMISSION.md        # Fill in live GitHub/YouTube links after recording
@@ -141,25 +144,45 @@ Sample queries to demonstrate the three required behaviors:
 
 The UI displays `original_query`, `transformed_query`, **stage-1 cosine similarity**, **stage-2 raw logit and sigmoid score**, old/new rank positions, confidence threshold, route reason, cited snippets, and downloadable JSON trace. There is no secret hidden reranker or fabricated status result.
 
-## 5. Threshold calibration and quality methodology
+## 5. Measured threshold calibration (Nov. 16, 2026)
 
-The sample `0.55` is a **provisional engineering starting value, not an empirically validated optimum**. Its only job is to demonstrate branch mechanics before calibration. `data/eval_cases.json` contains 20 human-authored expected routing labels (12 internal / 8 external); it is a small educational dataset, not a production-scale relevance judgment set.
+The initial engineering threshold was `0.55`. A **real local macOS calibration** of the actual `sentence-transformers/all-MiniLM-L6-v2` bi-encoder and `cross-encoder/ms-marco-MiniLM-L-6-v2` re-ranker evaluated **20 manually labeled queries** (`data/eval_cases.json`): 12 expected to use `INTERNAL_RAG` and 8 expected to use `WEB_FALLBACK`. No live web requests are made by the calibration script.
 
-To run a real calibration using your downloaded bi-encoder + cross-encoder (the script **does not call a live web search engine**):
+Run:
 
 ```bash
 uv run python -m scripts.calibrate_threshold
+# Writes results/calibration_results.json (no longer excluded by `.gitignore` in the updated package)
 ```
 
-This generates `results/calibration_results.json` with the **actual score for each question**, a threshold grid (`0.35 ... 0.95`) and a selected cutoff. The selection minimizes an explicit cost: **wrong internal answer = 3** versus **unnecessary web fallback = 1**, with accuracy as a tiebreaker. It reports:
+The script evaluated thresholds **0.35, 0.40, 0.45, ... 0.95**. It uses a weighted routing error with **3 points for an external query incorrectly accepted as internal** and **1 point for an internal query unnecessarily sent to web**. It breaks ties by accuracy, then the lower threshold.
 
-- **False internal rate:** fraction of external queries wrongly classified as `INTERNAL_RAG`.
-- **False web rate:** fraction of internal queries unnecessarily sent to `WEB_FALLBACK`.
-- **Accuracy:** fraction of correct route labels at each threshold.
+### Results from the user's local terminal output
 
-Inspect scores for mislabels, outliers, false confidence, domain shift, and manually review web vs internal needs. Set the resulting value in `.env` as `CONFIDENCE_THRESHOLD=...`; re-run the UI with fresh settings. Ideally use a separate held-out set and report performance by class. The freshness override is a separate explicit policy and is not counted in the sigmoid-only threshold calibration.
+| Indicator | Selected gate: **0.35** | Previous gate: **0.55** |
+|---|---:|---:|
+| Evaluated queries | 20 | 20 |
+| Correct route classifications | **19/20** | 18/20 |
+| Route accuracy, same labeled set | **95.0%** | 90.0% |
+| External queries incorrectly routed internally | **0/8** | 0/8 |
+| Internal queries unnecessarily routed to web | **1/12** | 2/12 |
+| False-internal rate | **0.0%** | 0.0% |
+| False-web rate | **8.3%** | 16.7% |
+| Weighted error (3 × false-internal + false-web) | **1** | 2 |
 
-**No real calibration report is bundled:** this environment could not download/run the three models or access DDGS in the application runtime. A numeric calibration finding must come from a user's real machine execution.
+**Failure analysis:** The internal question **I03 — “What causes connection pool socket starvation?”** received a top sigmoid score of approximately **0.114**, so it was routed to the web at `0.35`. The internal question **I12 — “How are HNSW vector indexes tuned?”** scored approximately **0.521** and was saved from unnecessary web routing when the cutoff was lowered from `0.55` to `0.35`. All eight externally labeled questions received `0.000` to three decimal places in the terminal display and were routed to `WEB_FALLBACK`.
+
+This **95% is in-sample routing accuracy**, not proof of retrieval accuracy, factual correctness, or generalization. It is based on a small, fictional internal corpus with deliberately out-of-domain external examples; a production threshold would require a separate held-out dataset, harder near-domain negatives, freshness cases, and periodic recalibration. The sigmoid output is **not** a calibrated probability of relevance. Freshness-sensitive queries independently trigger web fallback regardless of confidence.
+
+The user's Mac generated the full-precision per-query evidence at `results/calibration_results.json`; **commit that exact file** rather than recreating values from the screenshot. The source package now stops excluding this report in `.gitignore`.
+
+To use the selected threshold:
+
+```dotenv
+CONFIDENCE_THRESHOLD=0.35
+```
+
+If you already have `.env`, update it and restart the application. The sidebar threshold control can also be used for comparative demonstrations, but it does not rewrite `.env`. Re-run calibration with a held-out labeled set before treating `0.35` as a stable production policy.
 
 ## 6. Engineering audit (human-in-the-loop AI)
 
@@ -176,7 +199,7 @@ The deterministic test suite checks these corrected behaviors, but it **does not
 
 ```bash
 uv run pytest -v
-# Packaged evidence: 26 passed, 0 failed (deterministic tests)
+# Packaged evidence: 28 passed, 0 failed (deterministic tests, updated source package)
 
 # Live integration checks (run locally; requires models and web access)
 uv run python -m scripts.run_smoke
@@ -192,13 +215,32 @@ uv run python -m scripts.run_smoke
 | Low-confidence and freshness-triggered web routing + URL citations | Deterministic automated tests passed with web test doubles |
 | Prompt injection, invalid URLs, empty web evidence, unsupported LLM draft | Deterministic automated tests passed |
 | Ingestion, code fences, stable source IDs, cache invalidation fingerprint | Deterministic automated tests passed |
-| Real MiniLM + Chroma corpus indexing | **Requires local integration run** |
-| Real MS MARCO score distribution and empirical calibration | **Requires local calibration run** |
-| Live DDGS result and clickable citation link | **Requires local integration run** |
-| Local FLAN-T5 response quality and Streamlit UI | **Requires local visual review** |
+| Real MiniLM + Chroma corpus indexing | Local Mac calibration invoked the actual retriever; independently verify full UI/search outputs |
+| Real MS MARCO score distribution and empirical calibration | **Executed on user’s Mac; gate selected at 0.35 (19/20 on calibration set)** |
+| Live DDGS result and clickable citation link | **Needs a visible live fallback/citation check in the recorded demo** |
+| Local FLAN-T5 response quality and Streamlit UI | Streamlit launched on user’s Mac; generation/citation quality still requires review |
 
 Practical caveats: (a) remote web search is best effort and may be rate-limited; (b) snippet citation is not verification of a full external article; (c) CrossEncoder logits are not calibrated likelihoods; (d) regex-based injection filtering is defense in depth, not an absolute prevention mechanism; (e) this prototype has no authentication, adversarial web crawling or commercial SLA.
-Canvas.
+
+## 8. Mac launch fix and source-code update
+
+The original `src/app.py` produced `ModuleNotFoundError: No module named 'src'` when launched directly as a Streamlit entrypoint. The updated file now inserts the repository root into `sys.path` **before importing from `src`**. `src/config.py` also resolves relative `docs/`, `.rag_index/`, and `.env` against the repository root, regardless of the shell's current directory. The locally selected threshold is the new source default (`0.35`), while existing `.env` overrides are respected. `tests/test_config.py` adds two regression tests for the calibrated default and path handling.
+
+### Repository
+
+- GitHub: https://github.com/josehorta21/Assignment-Production-Two-Stage-RAG-Pipeline-
+- Live web deployment: none claimed; reproducible local Streamlit/Docker demo
+- YouTube recording: add the new Week 4 video link after uploading (the previous Week 3/architecture video is not this submission)
+
+## 9. Walkthrough / submission
+
+- [ ] Run `uv sync --extra dev`, `uv run pytest -v`, and `uv run streamlit run src/app.py`.
+- [ ] Capture one real **INTERNAL_RAG** response showing rank shifts, a valid internal chunk citation, and the threshold decision.
+- [ ] Capture one **WEB_FALLBACK** response (try a current-events query); ensure an actual public source URL is visible. If external search is blocked, report the service error honestly and use the UI's explicit override only to demonstrate routing control.
+- [x] Run actual local model calibration: threshold `0.35`, 19/20 routing decisions on the labeled calibration set.
+- [ ] Commit `results/calibration_results.json` from your Mac, and independently test the two UI routes with real citations.
+- [ ] Record your **5:00–7:00 minute** video with **webcam and screen visible simultaneously** throughout; describe at least two real audit flaws, show both routes and run pytest.
+- [ ] Upload the recording to YouTube (Unlisted or Public), place the link and the GitHub repository link into `CANVAS_SUBMISSION.md`, and submit through Canvas.
 
 ### References
 

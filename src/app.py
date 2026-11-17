@@ -1,7 +1,15 @@
 """Streamlit RAG observability workbench."""
 from __future__ import annotations
 
-from dataclasses import replace
+from pathlib import Path
+import sys
+
+# Streamlit executes src/app.py as an entrypoint; add the repository root so
+# imports such as `from src.config import ...` resolve on macOS and Docker.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 import streamlit as st
 import pandas as pd
 from src.config import load_settings

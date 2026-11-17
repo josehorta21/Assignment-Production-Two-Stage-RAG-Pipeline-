@@ -1,0 +1,258 @@
+{
+  "model": "ms-marco-MiniLM-L-6-v2",
+  "method": "sigmoid of raw logits; not a calibrated posterior probability",
+  "costs": {
+    "wrong_internal": 3,
+    "unnecessary_web": 1
+  },
+  "observations": [
+    {
+      "id": "I01",
+      "query": "What is the maxUnavailable default in Rolling Update Deployment?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.999565
+    },
+    {
+      "id": "I02",
+      "query": "How should readiness probes protect deployments from outages?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.837847
+    },
+    {
+      "id": "I03",
+      "query": "What causes connection pool socket starvation?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.114416
+    },
+    {
+      "id": "I04",
+      "query": "How do retry budgets avoid overload during failures?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.996956
+    },
+    {
+      "id": "I05",
+      "query": "How should an API enforce idempotency keys?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.649454
+    },
+    {
+      "id": "I06",
+      "query": "How do we handle queue visibility timeout errors?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.990193
+    },
+    {
+      "id": "I07",
+      "query": "Why does the circuit breaker open?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.952017
+    },
+    {
+      "id": "I08",
+      "query": "What is our token bucket rate limiting behavior?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.998615
+    },
+    {
+      "id": "I09",
+      "query": "How do we rotate JWT signing keys?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.999206
+    },
+    {
+      "id": "I10",
+      "query": "What is the backup restore verification process?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.841934
+    },
+    {
+      "id": "I11",
+      "query": "How do we isolate tenants in shared services?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.939778
+    },
+    {
+      "id": "I12",
+      "query": "How are HNSW vector indexes tuned?",
+      "expected": "INTERNAL_RAG",
+      "score": 0.520999
+    },
+    {
+      "id": "O01",
+      "query": "What was the latest Apple product launched today?",
+      "expected": "WEB_FALLBACK",
+      "score": 1.4e-05
+    },
+    {
+      "id": "O02",
+      "query": "What happened in world news yesterday?",
+      "expected": "WEB_FALLBACK",
+      "score": 1.5e-05
+    },
+    {
+      "id": "O03",
+      "query": "Who won the baseball championship yesterday?",
+      "expected": "WEB_FALLBACK",
+      "score": 1.7e-05
+    },
+    {
+      "id": "O04",
+      "query": "Which restaurants are open in Paris?",
+      "expected": "WEB_FALLBACK",
+      "score": 1.6e-05
+    },
+    {
+      "id": "O05",
+      "query": "What is the price of a Tesla Model Y?",
+      "expected": "WEB_FALLBACK",
+      "score": 1.3e-05
+    },
+    {
+      "id": "O06",
+      "query": "What is the weather forecast for Tokyo?",
+      "expected": "WEB_FALLBACK",
+      "score": 1.4e-05
+    },
+    {
+      "id": "O07",
+      "query": "What is the newest movie in theaters?",
+      "expected": "WEB_FALLBACK",
+      "score": 1.6e-05
+    },
+    {
+      "id": "O08",
+      "query": "Who is the current president of Iceland?",
+      "expected": "WEB_FALLBACK",
+      "score": 1.5e-05
+    }
+  ],
+  "selected": {
+    "threshold": 0.35,
+    "accuracy": 0.95,
+    "false_internal_count": 0,
+    "false_internal_rate": 0.0,
+    "false_web_count": 1,
+    "false_web_rate": 0.0833,
+    "weighted_error": 1
+  },
+  "grid": [
+    {
+      "threshold": 0.35,
+      "accuracy": 0.95,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 1,
+      "false_web_rate": 0.0833,
+      "weighted_error": 1
+    },
+    {
+      "threshold": 0.4,
+      "accuracy": 0.95,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 1,
+      "false_web_rate": 0.0833,
+      "weighted_error": 1
+    },
+    {
+      "threshold": 0.45,
+      "accuracy": 0.95,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 1,
+      "false_web_rate": 0.0833,
+      "weighted_error": 1
+    },
+    {
+      "threshold": 0.5,
+      "accuracy": 0.95,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 1,
+      "false_web_rate": 0.0833,
+      "weighted_error": 1
+    },
+    {
+      "threshold": 0.55,
+      "accuracy": 0.9,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 2,
+      "false_web_rate": 0.1667,
+      "weighted_error": 2
+    },
+    {
+      "threshold": 0.6,
+      "accuracy": 0.9,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 2,
+      "false_web_rate": 0.1667,
+      "weighted_error": 2
+    },
+    {
+      "threshold": 0.65,
+      "accuracy": 0.85,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 3,
+      "false_web_rate": 0.25,
+      "weighted_error": 3
+    },
+    {
+      "threshold": 0.7,
+      "accuracy": 0.85,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 3,
+      "false_web_rate": 0.25,
+      "weighted_error": 3
+    },
+    {
+      "threshold": 0.75,
+      "accuracy": 0.85,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 3,
+      "false_web_rate": 0.25,
+      "weighted_error": 3
+    },
+    {
+      "threshold": 0.8,
+      "accuracy": 0.85,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 3,
+      "false_web_rate": 0.25,
+      "weighted_error": 3
+    },
+    {
+      "threshold": 0.85,
+      "accuracy": 0.75,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 5,
+      "false_web_rate": 0.4167,
+      "weighted_error": 5
+    },
+    {
+      "threshold": 0.9,
+      "accuracy": 0.75,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 5,
+      "false_web_rate": 0.4167,
+      "weighted_error": 5
+    },
+    {
+      "threshold": 0.95,
+      "accuracy": 0.7,
+      "false_internal_count": 0,
+      "false_internal_rate": 0.0,
+      "false_web_count": 6,
+      "false_web_rate": 0.5,
+      "weighted_error": 6
+    }
+  ]
+}

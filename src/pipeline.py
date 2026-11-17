@@ -11,7 +11,7 @@ _FRESHNESS = re.compile(r"\b(today|yesterday|this week|right now|currently|lates
 
 class RAGPipeline:
     def __init__(self, rewriter, retriever, reranker, web_fallback, generator,
-                 *, threshold: float = 0.55, k1: int = 20, k2: int = 5):
+                 *, threshold: float = 0.35, k1: int = 20, k2: int = 5):
         if not 0.0 <= threshold <= 1.0:
             raise ValueError("Threshold must be between zero and one")
         if k1 < 1 or k2 < 1 or k2 > k1:
