@@ -1,0 +1,25 @@
+{
+  "description": "Manual routing labels for Northstar (synthetic) docs. Labels are human-authored but cross-encoder confidence is not yet calibrated.",
+  "cases": [
+    {"id":"I01", "query":"What is the maxUnavailable default in Rolling Update Deployment?", "route":"INTERNAL_RAG"},
+    {"id":"I02", "query":"How should readiness probes protect deployments from outages?", "route":"INTERNAL_RAG"},
+    {"id":"I03", "query":"What causes connection pool socket starvation?", "route":"INTERNAL_RAG"},
+    {"id":"I04", "query":"How do retry budgets avoid overload during failures?", "route":"INTERNAL_RAG"},
+    {"id":"I05", "query":"How should an API enforce idempotency keys?", "route":"INTERNAL_RAG"},
+    {"id":"I06", "query":"How do we handle queue visibility timeout errors?", "route":"INTERNAL_RAG"},
+    {"id":"I07", "query":"Why does the circuit breaker open?", "route":"INTERNAL_RAG"},
+    {"id":"I08", "query":"What is our token bucket rate limiting behavior?", "route":"INTERNAL_RAG"},
+    {"id":"I09", "query":"How do we rotate JWT signing keys?", "route":"INTERNAL_RAG"},
+    {"id":"I10", "query":"What is the backup restore verification process?", "route":"INTERNAL_RAG"},
+    {"id":"I11", "query":"How do we isolate tenants in shared services?", "route":"INTERNAL_RAG"},
+    {"id":"I12", "query":"How are HNSW vector indexes tuned?", "route":"INTERNAL_RAG"},
+    {"id":"O01", "query":"What was the latest Apple product launched today?", "route":"WEB_FALLBACK"},
+    {"id":"O02", "query":"What happened in world news yesterday?", "route":"WEB_FALLBACK"},
+    {"id":"O03", "query":"Who won the baseball championship yesterday?", "route":"WEB_FALLBACK"},
+    {"id":"O04", "query":"Which restaurants are open in Paris?", "route":"WEB_FALLBACK"},
+    {"id":"O05", "query":"What is the price of a Tesla Model Y?", "route":"WEB_FALLBACK"},
+    {"id":"O06", "query":"What is the weather forecast for Tokyo?", "route":"WEB_FALLBACK"},
+    {"id":"O07", "query":"What is the newest movie in theaters?", "route":"WEB_FALLBACK"},
+    {"id":"O08", "query":"Who is the current president of Iceland?", "route":"WEB_FALLBACK"}
+  ]
+}

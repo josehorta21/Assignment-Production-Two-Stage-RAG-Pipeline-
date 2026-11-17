@@ -1,0 +1,12 @@
+services:
+  rag-workbench:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./.model_cache:/app/.model_cache
+      - ./.rag_index:/app/.rag_index
+    environment:
+      - HF_HOME=/app/.model_cache
+      - TOKENIZERS_PARALLELISM=false
+    restart: unless-stopped

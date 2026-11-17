@@ -1,0 +1,39 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.0.2, pluggy-1.6.0 -- /opt/pyvenv/bin/python3
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.5', 'Platform': 'Linux-6.18.57-x86_64-with-glibc2.41', 'Packages': {'pytest': '9.0.2', 'pluggy': '1.6.0'}, 'Plugins': {'anyio': '4.13.0', 'ddtrace': '4.4.0', 'Faker': '40.1.2', 'asyncio': '1.3.0', 'cov': '7.0.0', 'json-report': '1.5.0', 'metadata': '3.1.1'}, 'PLATFORM': 'linux/amd64', 'CI': 'true'}
+rootdir: /mnt/data/production-rag-pipeline
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0, ddtrace-4.4.0, Faker-40.1.2, asyncio-1.3.0, cov-7.0.0, json-report-1.5.0, metadata-3.1.1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 26 items
+
+tests/test_generation.py::test_unsupported_local_llm_draft_is_discarded PASSED [  3%]
+tests/test_generation.py::test_extractive_sources_never_include_untrusted_instruction PASSED [  7%]
+tests/test_ingest.py::test_corpus_has_twelve_real_markdown_files PASSED  [ 11%]
+tests/test_ingest.py::test_section_ids_stable_when_metadata_changes PASSED [ 15%]
+tests/test_ingest.py::test_content_fingerprint_invalidated_on_edit PASSED [ 19%]
+tests/test_ingest.py::test_code_fence_is_kept_inside_its_section PASSED  [ 23%]
+tests/test_pipeline_qa.py::test_high_confidence_routes_internal_with_chunk_citation PASSED [ 26%]
+tests/test_pipeline_qa.py::test_out_of_domain_low_confidence_routes_web_with_url PASSED [ 30%]
+tests/test_pipeline_qa.py::test_fresh_query_forces_web_even_if_cross_encoder_confident PASSED [ 34%]
+tests/test_pipeline_qa.py::test_manual_override_is_explicit PASSED       [ 38%]
+tests/test_pipeline_qa.py::test_prompt_injection_in_web_result_not_executed PASSED [ 42%]
+tests/test_pipeline_qa.py::test_missing_web_evidence_cannot_hallucinate PASSED [ 46%]
+tests/test_pipeline_qa.py::test_external_url_allowlist_avoids_private_targets PASSED [ 50%]
+tests/test_pipeline_qa.py::test_injection_text_sanitization PASSED       [ 53%]
+tests/test_rerank_engine.py::test_pairwise_reranker_uses_logits_and_reorders PASSED [ 57%]
+tests/test_rerank_engine.py::test_reranker_with_empty_candidates_does_not_load_model PASSED [ 61%]
+tests/test_reranker.py::test_sigmoid_handles_positive_negative_logits PASSED [ 65%]
+tests/test_reranker.py::test_threshold_gate_matches_two_mock_scores PASSED [ 69%]
+tests/test_reranker.py::test_empty_candidates_force_web PASSED           [ 73%]
+tests/test_reranker.py::test_invalid_threshold_rejected PASSED           [ 76%]
+tests/test_reranker.py::test_threshold_calibration_penalizes_false_internal_more PASSED [ 80%]
+tests/test_rewriter.py::test_pronoun_resolution_expands_prior_topic PASSED [ 84%]
+tests/test_rewriter.py::test_empty_input_rejected PASSED                 [ 88%]
+tests/test_rewriter.py::test_preserves_exact_configuration_identifier PASSED [ 92%]
+tests/test_rewriter.py::test_local_llm_timeout_falls_back PASSED         [ 96%]
+tests/test_rewriter.py::test_local_llm_cannot_delete_identifier PASSED   [100%]
+
+============================== 26 passed in 1.82s ==============================

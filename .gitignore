@@ -1,0 +1,12 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+.rag_index/
+.model_cache/
+.cache/
+.DS_Store
+results/calibration_results.json
+results/live_smoke_results.json

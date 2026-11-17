@@ -1,0 +1,30 @@
+[project]
+name = "production-rag-pipeline"
+version = "1.0.0"
+description = "Adaptive two-stage local RAG with query rewriting, cross-encoder ranking, and cited web fallback"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "chromadb>=1.0,<2",
+  "sentence-transformers>=3.0,<6",
+  "transformers>=4.41,<6",
+  "torch>=2.3,<3",
+  "sentencepiece>=0.2,<1",
+  "pydantic>=2.7,<3",
+  "numpy>=1.26,<3",
+  "pandas>=2.1,<3",
+  "ddgs>=9.0,<10",
+  "streamlit>=1.39,<2",
+  "python-dotenv>=1.0,<2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pytest-asyncio>=0.23,<2"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+[tool.uv]
+package = false
