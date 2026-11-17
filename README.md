@@ -198,15 +198,7 @@ uv run python -m scripts.run_smoke
 | Local FLAN-T5 response quality and Streamlit UI | **Requires local visual review** |
 
 Practical caveats: (a) remote web search is best effort and may be rate-limited; (b) snippet citation is not verification of a full external article; (c) CrossEncoder logits are not calibrated likelihoods; (d) regex-based injection filtering is defense in depth, not an absolute prevention mechanism; (e) this prototype has no authentication, adversarial web crawling or commercial SLA.
-
-## 8. Walkthrough / submission
-
-- [ ] Run `uv sync --extra dev`, `uv run pytest -v`, and `uv run streamlit run src/app.py`.
-- [ ] Capture one real **INTERNAL_RAG** response showing rank shifts, a valid internal chunk citation, and the threshold decision.
-- [ ] Capture one **WEB_FALLBACK** response (try a current-events query); ensure an actual public source URL is visible. If external search is blocked, report the service error honestly and use the UI's explicit override only to demonstrate routing control.
-- [ ] Run the threshold calibration script and report observed rates; do not confuse generated test doubles with external model measurements.
-- [ ] Record your **5:00–7:00 minute** video with **webcam and screen visible simultaneously** throughout; describe at least two real audit flaws, show both routes and run pytest.
-- [ ] Upload the recording to YouTube (Unlisted or Public), place the link and the GitHub repository link into `CANVAS_SUBMISSION.md`, and submit through Canvas.
+Canvas.
 
 ### References
 
